@@ -1,0 +1,11 @@
+
+#entornos virtuales
+venv/
+.venv/
+
+#claves privadas
+.env
+
+#archivos  de basura  de python
+__pycache__/
+

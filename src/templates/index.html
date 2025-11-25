@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check the weather</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+<body>
+    <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
+        <div class="weather-container">
+            <div class="weather-header">
+                <h1 class="mb-4"> Consulta aquí el clima de tu ciudad y mira qué puedes hacer ese día dependiendo del tiempo.</h1>
+            </div>
+        <form action="/plans" method="post" class="mb-4">
+            <div class="mb-3">
+                <label for="city" class="form-label"> Escribe el nombre del sitio que quieras consultar</label>
+                <input type="text" class="form-control" id="city" name="city" required
+                oninvalid="this.setCustomValidity('Por favor, ¡escribe algo que suene como una ciudad!')"
+                oninput="this.setCustomValidity('')">
+                <!-- Esto borra el mensaje de error personalizado en cuanto empiezas a escribir, porque sino el campo seguiría como inválido aunque el usuario ya lo esté rellenando. -->
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label"> Selecciona o escribe una fecha (dd/mm/aa)</label>
+                <input type="int" class="form-control" id="date" name="date" 
+                oninvalid="this.setCustomValidity('Por favor, ¡escribe la fecha en el formato correcto!')"
+                oninput="this.setCustomValidity('')">
+                <!-- Esto borra el mensaje de error personalizado en cuanto empiezas a escribir, porque sino el campo seguiría como inválido aunque el usuario ya lo esté rellenando. -->
+            </div>
+
+            <div class="button">
+                <button type="submit" class="btn btn-primary w-75"> ¡Quiero saberlo ya, que tengo planes!</button>
+            </div>
+        </form>
+        <!-- Esto es Jinja2, el lenguaje templating que Flask usa para “inyectar” datos dentro del HTML -->
+        {% if error %}
+        <div class="alert alert-danger w-100" role="alert"> {{ error}} </div>
+        {% endif %}
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+</body>
+</html>
