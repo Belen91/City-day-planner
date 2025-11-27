@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posibles planes para {{city}}</title>
+</head>
+<body>
+    <h1>Tus planes para la fecha {{date}} en {{city}}</h1>
+
+    <section>
+        <h2>Tiempo</h2>
+        {% if weather %}
+        <p>Temperatura: {{weather.temperature}} ºC</p>
+        <p>Descripción: {{weather.description}}</p>
+        <p>Viento: {{weather.wind_speed}} m/s</p>
+        {% else %}
+        <p>No se ha podido obtener el tiempo</p>
+        {% endif %}
+    </section>
+    <section>
+        <h3>Eventos</h3>
+    {% if events %}
+      <ul>
+        {% for e in events %}
+          <li>
+            {{ e.name }} – {{ e.venue }} – {{ e.local_date }} {{ e.local_time }}
+            {% if e.url %}
+              <a href="{{ e.url }}" target="_blank">Ver más</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se han encontrado eventos para esa fecha.</p>
+    {% endif %}
+    </section>
+    <div class="button">
+        <a href="/" class="btn btn-primary w-100"> Volver</a>
+    </div>
+</body>
+</html>

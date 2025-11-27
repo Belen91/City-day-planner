@@ -14,7 +14,7 @@
             <div class="weather-header">
                 <h1 class="mb-4"> Consulta aquí el clima de tu ciudad y mira qué puedes hacer ese día dependiendo del tiempo.</h1>
             </div>
-        <form action="/plans" method="post" class="mb-4">
+        <form action="/plan" method="post" class="mb-4">
             <div class="mb-3">
                 <label for="city" class="form-label"> Escribe el nombre del sitio que quieras consultar</label>
                 <input type="text" class="form-control" id="city" name="city" required
@@ -23,13 +23,12 @@
                 <!-- Esto borra el mensaje de error personalizado en cuanto empiezas a escribir, porque sino el campo seguiría como inválido aunque el usuario ya lo esté rellenando. -->
             </div>
             <div class="mb-3">
-                <label for="date" class="form-label"> Selecciona o escribe una fecha (dd/mm/aa)</label>
-                <input type="int" class="form-control" id="date" name="date" 
+                <label for="date" class="form-label"> Fecha: </label>
+                <input type="date" id="date" name="date" 
                 oninvalid="this.setCustomValidity('Por favor, ¡escribe la fecha en el formato correcto!')"
                 oninput="this.setCustomValidity('')">
                 <!-- Esto borra el mensaje de error personalizado en cuanto empiezas a escribir, porque sino el campo seguiría como inválido aunque el usuario ya lo esté rellenando. -->
             </div>
-
             <div class="button">
                 <button type="submit" class="btn btn-primary w-75"> ¡Quiero saberlo ya, que tengo planes!</button>
             </div>

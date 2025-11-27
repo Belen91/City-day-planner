@@ -11,7 +11,7 @@ forecast_url= "http://api.openweathermap.org/data/2.5/forecast"
 def get_weather(city):
     """tiempo actual en una ciudad."""
     params = {
-        "city" : city,
+        "q" : city,
         "appid" : OPENWEATHER_API_KEY,
         "units" : "metric",
         "lang" : "es",
@@ -34,25 +34,27 @@ def get_weather(city):
     }
 
 
-def get_weather_forecast(city, date):
+def get_weather_forecast(city: str, date:str):
     """
     Tiempo aproximado para una fecha concreta:
         - Definimos variables de fecha (hoy o fecha proxima)
         - Si no hay fecha o la fecha es de hoy, entonces usamos la función de arriba.
         - Sino, usamos forecast, que funciona por slots[]. 
     """
+    today = date_cls.today()
+    if not date:
+        return get_weather(city)
     
     target_date = datetime.strptime(date, "%Y-%m-%d").date()
-    today = date_cls.today()
     
-    if not date or target_date == today:
-        return {
-            "mode": "current",
-            "data": get_weather(city)
-        }
+    if target_date == today:
+        return get_weather(city)
+    
+    if target_date < today:
+        return None
     
     params = {
-        "cityname" : city,
+        "q" : city,
         "appid" : OPENWEATHER_API_KEY,
         "units" : "metric",
         "lang" : "es",
@@ -68,19 +70,29 @@ def get_weather_forecast(city, date):
         if dt.date() == target_date:  
             slots.append({
                 "time": dt.strftime("%H:%M"),
-                "temp" :item["main"]["temp"],
+                "temperature" :item["main"]["temp"],
                 "feels_like" : item["main"]["feels_like"],
-                "description": item["weather"][0]["description"]
+                "description": item["weather"][0]["description"],
+                "pressure" : item["main"].get("pressure"),
+                "humidity" : item["main"].get("humidity"),
+                "wind_speed" : item.get("wind",{}).get("speed")
             })
+
+    if not slots: 
+        return None
+
+    summary_slot = next(
+        (s for s in slots if s["time"].startswith("12")),
+        slots[0]
+    )
     
-    main = data['main']
-    wind = data ['wind']
-    weather_description = data['weather'] [0] ['description']
 
     return  {
-            'temperature' : main['temp'],
-            'pressure' : main['pressure'],
-            'humidity' : main ['humidity'],
-            'wind_speed' : wind['speed'],
-            'description' : weather_description
+            'temperature' : summary_slot['temperature'],
+            'pressure' : summary_slot['pressure'],
+            'humidity' : summary_slot ['humidity'],
+            'wind_speed' : summary_slot['wind_speed'],
+            'description' : summary_slot['description'],
+            'time': summary_slot['time'],
+            'slots' : slots
     }

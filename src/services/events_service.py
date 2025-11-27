@@ -13,18 +13,20 @@ def get_events(date, city, size=20):
     if isinstance(date, str):
         date = datetime.strptime(date, "%Y-%m-%d").date()
 
-    start_date = datetime.combine(date, time.min).isoformat() + "Z"
-    end_date = datetime.combine(date, time.max).isoformat() + "Z"
+    start_date = datetime.combine(date, time.min).strftime('%Y-%m-%dT%H:%M:%SZ')
+    end_date = datetime.combine(date, time.max).strftime('%Y-%m-%dT%H:%M:%SZ')
     
     params = {
         "apikey": TICKETMASTER_API_KEY,
         "city": city, 
-        "startDateTime" : start_date,
+        "startDateTime": start_date,
         "endDateTime" : end_date,
         "size" : size, 
-        "sort" : "date, asc"
+        "sort" : "date,asc"
     }
     
+    print(params)
+
     response = requests.get(base_url, params=params, timeout=5) #añadir timeout siempre, request monta los parámetros sola.
     response.raise_for_status() #método de request que lanza un error automáticamente si la respuesta HTTP no es 200(OK)
     data = response.json()
@@ -38,6 +40,6 @@ def get_events(date, city, size=20):
             "local_time" : ev["dates"]["start"].get("localTime"),
             "venue" : ev.get("_embedded", {}).get("venues",[{}])[0].get("name")
         })
-
+    
     return events
 
